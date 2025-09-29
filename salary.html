@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรแกรมคำนวณเงินเดือน - เป้าหมายทางการเงิน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+                    <i class="fas fa-calculator mr-3"></i>โปรแกรมคำนวณเงินเดือน
+                </h1>
+                <p class="text-gray-600">คำนวณเงินเดือนแบบละเอียด พร้อมวางแผนเป้าหมายทางการเงิน</p>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex mb-6 border-b overflow-x-auto">
+                <button id="basicTab" class="tab-button active px-4 py-2 font-medium text-blue-600 border-b-2 border-blue-600 whitespace-nowrap">
+                    <i class="fas fa-user mr-2"></i>คำนวณพื้นฐาน
+                </button>
+                <button id="advancedTab" class="tab-button px-4 py-2 font-medium text-gray-500 whitespace-nowrap">
+                    <i class="fas fa-chart-line mr-2"></i>คำนวณขั้นสูง
+                </button>
+                <button id="goalsTab" class="tab-button px-4 py-2 font-medium text-gray-500 whitespace-nowrap">
+                    <i class="fas fa-bullseye mr-2"></i>เป้าหมายทางการเงิน
+                </button>
+                <button id="historyTab" class="tab-button px-4 py-2 font-medium text-gray-500 whitespace-nowrap">
+                    <i class="fas fa-history mr-2"></i>ประวัติการคำนวณ
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- ส่วนกรอกข้อมูล -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Basic Calculation Tab -->
+                    <div id="basicContent" class="tab-content active">
+                        <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                            <h2 class="text-xl font-semibold text-blue-800 mb-2">
+                                <i class="fas fa-info-circle mr-2"></i>ข้อมูลพื้นฐาน
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">เงินเดือนพื้นฐาน</label>
+                                    <div class="relative">
+                                        <input type="number" id="basicSalary" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 15000">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">จำนวนวันทำงานต่อเดือน</label>
+                                    <input type="number" id="workDays" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 22" value="22">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าล่วงเวลา (OT) ต่อชั่วโมง</label>
+                                    <div class="relative">
+                                        <input type="number" id="otRate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 100" value="100">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท/ชม.</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">จำนวนชั่วโมงล่วงเวลา (OT)</label>
+                                    <input type="number" id="otHours" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 10" value="0">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">โบนัส</label>
+                                    <div class="relative">
+                                        <input type="number" id="bonus" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 2000" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าพาหนะ</label>
+                                    <div class="relative">
+                                        <input type="number" id="transportation" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 1000" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 rounded-xl p-4 mb-6">
+                            <h2 class="text-xl font-semibold text-yellow-800 mb-2">
+                                <i class="fas fa-file-invoice-dollar mr-2"></i>การหักเงิน
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">หักประกันสังคม (5%)</label>
+                                    <div class="flex items-center mt-2">
+                                        <input type="checkbox" id="socialSecurity" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                                        <label for="socialSecurity" class="ml-2 text-sm text-gray-700">หักประกันสังคม</label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">กองทุนสำรองเลี้ยงชีพ</label>
+                                    <div class="relative">
+                                        <input type="number" id="providentFund" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 500" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าประกันสุขภาพ</label>
+                                    <div class="relative">
+                                        <input type="number" id="healthInsurance" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 300" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าสวัสดิการอื่นๆ</label>
+                                    <div class="relative">
+                                        <input type="number" id="otherDeductions" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 200" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Calculation Tab -->
+                    <div id="advancedContent" class="tab-content hidden">
+                        <div class="bg-purple-50 rounded-xl p-4 mb-6">
+                            <h2 class="text-xl font-semibold text-purple-800 mb-2">
+                                <i class="fas fa-cogs mr-2"></i>การคำนวณภาษี
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทผู้เสียภาษี</label>
+                                    <select id="taxType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="single">โสด</option>
+                                        <option value="married">สมรส</option>
+                                        <option value="family">มีผู้อยู่ในอุปการะ</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">จำนวนผู้อยู่ในอุปการะ</label>
+                                    <input type="number" id="dependents" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="0" min="0" max="10">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าลดหย่อนอื่นๆ</label>
+                                    <div class="relative">
+                                        <input type="number" id="otherAllowances" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 30000" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ประกันชีวิต/สุขภาพ</label>
+                                    <div class="relative">
+                                        <input type="number" id="insuranceDeduction" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 100000" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h2 class="text-xl font-semibold text-green-800 mb-2">
+                                <i class="fas fa-chart-pie mr-2"></i>การวิเคราะห์ทางการเงิน
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">เป้าหมายการออม (%)</label>
+                                    <input type="number" id="savingGoal" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 20" value="20" min="0" max="100">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ค่าใช้จ่ายต่อเดือน</label>
+                                    <div class="relative">
+                                        <input type="number" id="monthlyExpenses" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เช่น 10000" value="0">
+                                        <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Financial Goals Tab -->
+                    <div id="goalsContent" class="tab-content hidden">
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-4 flex items-center">
+                                <i class="fas fa-bullseye mr-3"></i>ตั้งเป้าหมายทางการเงิน
+                            </h2>
+                            <p class="text-gray-600 mb-6">วางแผนการเงินระยะยาวสำหรับเป้าหมายสำคัญในชีวิตของคุณ</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-purple-200 cursor-pointer transition-all hover:shadow-lg" data-goal="house">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">ดาวน์บ้าน</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">วางแผนเก็บเงินดาวน์สำหรับบ้านหลังแรก</p>
+                                </div>
+                                
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-blue-200 cursor-pointer transition-all hover:shadow-lg" data-goal="car">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                            <i class="fas fa-car"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">ซื้อรถ</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">วางแผนซื้อรถยนต์คันใหม่หรือคันแรก</p>
+                                </div>
+                                
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-green-200 cursor-pointer transition-all hover:shadow-lg" data-goal="travel">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                            <i class="fas fa-plane"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">ท่องเที่ยว</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">วางแผนเที่ยวต่างประเทศหรือในประเทศ</p>
+                                </div>
+                                
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-yellow-200 cursor-pointer transition-all hover:shadow-lg" data-goal="education">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">การศึกษา</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">วางแผนค่าเล่าเรียนหรือพัฒนาทักษะ</p>
+                                </div>
+                                
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-red-200 cursor-pointer transition-all hover:shadow-lg" data-goal="retirement">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                            <i class="fas fa-umbrella-beach"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">เกษียณอายุ</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">วางแผนการเงินหลังเกษียณอายุ</p>
+                                </div>
+                                
+                                <div class="goal-card bg-white rounded-xl p-4 shadow-md border border-indigo-200 cursor-pointer transition-all hover:shadow-lg" data-goal="emergency">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                                            <i class="fas fa-first-aid"></i>
+                                        </div>
+                                        <h3 class="font-semibold ml-3">เงินฉุกเฉิน</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600">สร้างเงินสำรองฉุกเฉิน 3-6 เดือน</p>
+                                </div>
+                            </div>
+                            
+                            <div id="goalForm" class="bg-white rounded-xl p-6 shadow-md hidden">
+                                <h3 id="goalFormTitle" class="text-xl font-bold text-gray-800 mb-4"></h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">เป้าหมายเงินที่ต้องการ (บาท)</label>
+                                        <div class="relative">
+                                            <input type="number" id="goalAmount" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="เช่น 500000">
+                                            <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">ระยะเวลา (เดือน)</label>
+                                        <input type="number" id="goalTime" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="เช่น 36" value="12">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">เงินออมที่มีอยู่แล้ว (บาท)</label>
+                                        <div class="relative">
+                                            <input type="number" id="currentSavings" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="เช่น 50000" value="0">
+                                            <span class="absolute right-3 top-3 text-gray-500">บาท</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">อัตราดอกเบี้ยต่อปี (%)</label>
+                                        <div class="relative">
+                                            <input type="number" id="interestRate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="เช่น 2.5" value="2.5" step="0.1">
+                                            <span class="absolute right-3 top-3 text-gray-500">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between">
+                                    <button id="cancelGoal" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                                        <i class="fas fa-times mr-2"></i> ยกเลิก
+                                    </button>
+                                    <button id="calculateGoal" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                        <i class="fas fa-calculator mr-2"></i> คำนวณ
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="goalResult" class="bg-white rounded-xl p-6 shadow-md mt-6 hidden">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">ผลการคำนวณ</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    <div class="bg-blue-50 rounded-lg p-4">
+                                        <h4 class="font-semibold text-blue-700 mb-2">เป้าหมายของคุณ</h4>
+                                        <p id="goalTarget" class="text-2xl font-bold text-blue-800">0 บาท</p>
+                                        <p id="goalTimeframe" class="text-sm text-blue-600 mt-1">ภายใน 0 เดือน</p>
+                                    </div>
+                                    
+                                    <div class="bg-green-50 rounded-lg p-4">
+                                        <h4 class="font-semibold text-green-700 mb-2">ต้องออมต่อเดือน</h4>
+                                        <p id="monthlySaving" class="text-2xl font-bold text-green-800">0 บาท</p>
+                                        <p id="savingPercentage" class="text-sm text-green-600 mt-1">คิดเป็น 0% ของเงินเดือนสุทธิ</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-purple-50 rounded-lg p-4">
+                                    <h4 class="font-semibold text-purple-700 mb-2">รายละเอียด</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">เงินออมที่มีอยู่แล้ว:</span>
+                                            <span id="currentSavingsResult" class="font-medium">0 บาท</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">เงินที่ต้องออมเพิ่ม:</span>
+                                            <span id="remainingAmount" class="font-medium">0 บาท</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">ดอกเบี้ยที่คาดว่าจะได้รับ:</span>
+                                            <span id="interestEarned" class="font-medium">0 บาท</span>
+                                        </div>
+                                        <div class="flex justify-between font-semibold border-t pt-2">
+                                            <span class="text-gray-700">รวมเงินเมื่อครบกำหนด:</span>
+                                            <span id="totalAtGoal" class="text-purple-700">0 บาท</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6">
+                                    <button id="saveGoal" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mr-3">
+                                        <i class="fas fa-save mr-2"></i> บันทึกเป้าหมาย
+                                    </button>
+                                    <button id="newGoal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                        <i class="fas fa-plus mr-2"></i> ตั้งเป้าหมายใหม่
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="savedGoals" class="bg-white rounded-xl p-6 shadow-md">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-list-check mr-2"></i>เป้าหมายที่บันทึกไว้
+                            </h3>
+                            
+                            <div id="goalsList" class="space-y-4">
+                                <!-- Goals will be added here dynamically -->
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-bullseye text-4xl mb-2"></i>
+                                    <p>ยังไม่มีเป้าหมายที่บันทึกไว้</p>
+                                    <p class="text-sm">คลิกที่เป้าหมายด้านบนเพื่อเริ่มต้นวางแผน</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- History Tab -->
+                    <div id="historyContent" class="tab-content hidden">
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-history mr-2"></i>ประวัติการคำนวณ
+                            </h2>
+                            <div id="historyList" class="space-y-4 max-h-96 overflow-y-auto">
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-clock text-4xl mb-2"></i>
+                                    <p>ยังไม่มีประวัติการคำนวณ</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button id="clearHistory" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                    <i class="fas fa-trash mr-2"></i>ล้างประวัติ
+                                </button>
+                                <button id="exportHistory" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                                    <i class="fas fa-file-export mr-2"></i>ส่งออกข้อมูล
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                        <button id="calculateBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-calculator mr-2"></i> คำนวณเงินเดือน
+                        </button>
+                        <script>
+                            document.getElementById('calculateBtn').addEventListener('click', function() {
+                                calculateSalary();
+                            });
+                        </script>
+                        <button id="resetBtn" class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-redo mr-2"></i> ล้างข้อมูล
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ส่วนแสดงผล -->
+                <div class="space-y-6">
+                    <!-- ... (ส่วนแสดงผลเงินเดือนเหมือนโค้ดก่อนหน้า) ... -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-chart-bar mr-2 text-blue-500"></i>ผลลัพธ์
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">เงินเดือนพื้นฐาน:</span>
+                                <span id="basicSalaryResult" class="font-medium">0 บาท</span>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">เงินล่วงเวลา (OT):</span>
+                                <span id="otResult" class="font-medium">0 บาท</span>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">โบนัส:</span>
+                                <span id="bonusResult" class="font-medium">0 บาท</span>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">ค่าพาหนะ:</span>
+                                <span id="transportationResult" class="font-medium">0 บาท</span>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between font-semibold">
+                                    <span class="text-gray-700">เงินเดือนรวม:</span>
+                                    <span id="totalSalary" class="text-blue-600">0 บาท</span>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">หักประกันสังคม:</span>
+                                    <span id="socialSecurityResult" class="font-medium">0 บาท</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-gray-600">กองทุนสำรองเลี้ยงชีพ:</span>
+                                    <span id="providentFundResult" class="font-medium">0 บาท</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-gray-600">ค่าประกันสุขภาพ:</span>
+                                    <span id="healthInsuranceResult" class="font-medium">0 บาท</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-gray-600">ค่าสวัสดิการอื่นๆ:</span>
+                                    <span id="otherDeductionsResult" class="font-medium">0 บาท</span>
+                                </div>
+                                
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-gray-600">หักภาษี ณ ที่จ่าย:</span>
+                                    <span id="taxResult" class="font-medium">0 บาท</span>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between text-lg font-bold">
+                                    <span class="text-gray-800">เงินเดือนสุทธิ:</span>
+                                    <span id="netSalary" class="text-green-600">0 บาท</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Financial Analysis -->
+                    <div id="financialAnalysis" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hidden">
+                        <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-chart-pie mr-2 text-green-500"></i>การวิเคราะห์ทางการเงิน
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-600">เป้าหมายการออม:</span>
+                                    <span id="savingGoalResult" class="font-medium">0 บาท</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div id="savingProgress" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-600">ค่าใช้จ่ายต่อเดือน:</span>
+                                    <span id="monthlyExpensesResult" class="font-medium">0 บาท</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div id="expensesProgress" class="bg-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">เงินคงเหลือหลังหักค่าใช้จ่าย:</span>
+                                    <span id="remainingMoney" class="font-medium text-blue-600">0 บาท</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
+                        <h3 class="font-semibold mb-2 flex items-center">
+                            <i class="fas fa-file-alt mr-2"></i>สรุป
+                        </h3>
+                        <p id="summaryText" class="text-sm">กรุณากรอกข้อมูลและกดปุ่มคำนวณเพื่อดูสรุปเงินเดือน</p>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <h3 class="font-semibold text-gray-700 mb-3">การดำเนินการด่วน</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="saveCalculation" class="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition text-sm">
+                                <i class="fas fa-save mr-1"></i> บันทึก
+                            </button>
+                            <button id="printResult" class="p-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition text-sm">
+                                <i class="fas fa-print mr-1"></i> พิมพ์
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab-button').forEach(tab => {
+                    tab.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                    tab.classList.add('text-gray-500');
+                });
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active', 'text-blue-600', 'border-blue-600');
+                this.classList.remove('text-gray-500');
+                
+                // Show corresponding content
+                const tabId = this.id.replace('Tab', 'Content');
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Show financial analysis only on advanced tab
+                if (this.id === 'advancedTab') {
+                    document.getElementById('financialAnalysis').classList.remove('hidden');
+                } else {
+                    document.getElementById('financialAnalysis').classList.add('hidden');
+                }
+            });
+        });
+        
+        // Goal selection
+        const goalCards = document.querySelectorAll('.goal-card');
+        const goalForm = document.getElementById('goalForm');
+        const goalFormTitle = document.getElementById('goalFormTitle');
+        const goalResult = document.getElementById('goalResult');
+        const cancelGoal = document.getElementById('cancelGoal');
+        const calculateGoal = document.getElementById('calculateGoal');
+        const saveGoal = document.getElementById('saveGoal');
+        const newGoal = document.getElementById('newGoal');
+        const goalsList = document.getElementById('goalsList');
+        
+        let currentGoalType = '';
+        const goalIcons = {
+            'house': 'fas fa-home',
+            'car': 'fas fa-car',
+            'travel': 'fas fa-plane',
+            'education': 'fas fa-graduation-cap',
+            'retirement': 'fas fa-umbrella-beach',
+            'emergency': 'fas fa-first-aid'
+        };
+        
+        const goalTitles = {
+            'house': 'ดาวน์บ้าน',
+            'car': 'ซื้อรถ',
+            'travel': 'ท่องเที่ยว',
+            'education': 'การศึกษา',
+            'retirement': 'เกษียณอายุ',
+            'emergency': 'เงินฉุกเฉิน'
+        };
+        
+        goalCards.forEach(card => {
+            card.addEventListener('click', function() {
+                currentGoalType = this.getAttribute('data-goal');
+                goalFormTitle.textContent = `เป้าหมาย: ${goalTitles[currentGoalType]}`;
+                goalForm.classList.remove('hidden');
+                
+                // Scroll to form
+                goalForm.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        cancelGoal.addEventListener('click', function() {
+            goalForm.classList.add('hidden');
+            goalResult.classList.add('hidden');
+        });
+        
+        calculateGoal.addEventListener('click', function() {
+            const goalAmount = parseFloat(document.getElementById('goalAmount').value) || 0;
+            const goalTime = parseFloat(document.getElementById('goalTime').value) || 0;
+            const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+            
+            if (goalAmount <= 0 || goalTime <= 0) {
+                alert('กรุณากรอกจำนวนเงินเป้าหมายและระยะเวลาให้ถูกต้อง');
+                return;
+            }
+            
+            // Calculate monthly saving needed
+            const remainingAmount = goalAmount - currentSavings;
+            const monthlyInterestRate = interestRate / 100 / 12;
+            
+            let monthlySaving;
+            if (monthlyInterestRate > 0) {
+                // With compound interest
+                monthlySaving = remainingAmount * monthlyInterestRate / 
+                              (Math.pow(1 + monthlyInterestRate, goalTime) - 1) * 
+                              (1 + monthlyInterestRate);
+            } else {
+                // Without interest
+                monthlySaving = remainingAmount / goalTime;
+            }
+            
+            // Calculate interest earned
+            const totalSaved = monthlySaving * goalTime;
+            const interestEarned = totalSaved - remainingAmount;
+            const totalAtGoal = currentSavings + totalSaved;
+            
+            // Get net salary for percentage calculation
+            const netSalaryText = document.getElementById('netSalary').textContent;
+            const netSalary = parseFloat(netSalaryText.replace(/[^0-9.]/g, '')) || 0;
+            const savingPercentage = netSalary > 0 ? (monthlySaving / netSalary) * 100 : 0;
+            
+            // Display results
+            document.getElementById('goalTarget').textContent = formatCurrency(goalAmount);
+            document.getElementById('goalTimeframe').textContent = `ภายใน ${goalTime} เดือน`;
+            document.getElementById('monthlySaving').textContent = formatCurrency(monthlySaving);
+            document.getElementById('savingPercentage').textContent = `คิดเป็น ${savingPercentage.toFixed(1)}% ของเงินเดือนสุทธิ`;
+            document.getElementById('currentSavingsResult').textContent = formatCurrency(currentSavings);
+            document.getElementById('remainingAmount').textContent = formatCurrency(remainingAmount);
+            document.getElementById('interestEarned').textContent = formatCurrency(interestEarned);
+            document.getElementById('totalAtGoal').textContent = formatCurrency(totalAtGoal);
+            
+            goalResult.classList.remove('hidden');
+            goalResult.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        saveGoal.addEventListener('click', function() {
+            const goalAmount = parseFloat(document.getElementById('goalAmount').value) || 0;
+            const goalTime = parseFloat(document.getElementById('goalTime').value) || 0;
+            const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
+            const monthlySavingText = document.getElementById('monthlySaving').textContent;
+            const monthlySaving = parseFloat(monthlySavingText.replace(/[^0-9.]/g, '')) || 0;
+            
+            // Create goal item
+            const goalItem = document.createElement('div');
+            goalItem.className = 'bg-white border border-gray-200 rounded-lg p-4';
+            goalItem.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mr-3">
+                            <i class="${goalIcons[currentGoalType]}"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">${goalTitles[currentGoalType]}</h4>
+                            <p class="text-sm text-gray-600">เป้าหมาย: ${formatCurrency(goalAmount)}</p>
+                            <p class="text-sm text-gray-600">ระยะเวลา: ${goalTime} เดือน</p>
+                            <p class="text-sm text-green-600 font-medium">ต้องออมเดือนละ: ${formatCurrency(monthlySaving)}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="edit-goal p-1 text-blue-500 hover:text-blue-700">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-goal p-1 text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-3 bg-gray-100 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full" style="width: ${(currentSavings / goalAmount * 100).toFixed(1)}%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>ออมแล้ว: ${formatCurrency(currentSavings)}</span>
+                    <span>${(currentSavings / goalAmount * 100).toFixed(1)}%</span>
+                </div>
+            `;
+            
+            // Add to goals list
+            if (goalsList.querySelector('.text-center')) {
+                goalsList.innerHTML = '';
+            }
+            goalsList.prepend(goalItem);
+            
+            // Add event listeners to edit and delete buttons
+            goalItem.querySelector('.edit-goal').addEventListener('click', function() {
+                // In a real app, this would populate the form with existing data
+                alert('ฟีเจอร์แก้ไขกำลังพัฒนาอยู่');
+            });
+            
+            goalItem.querySelector('.delete-goal').addEventListener('click', function() {
+                if (confirm('คุณแน่ใจว่าต้องการลบเป้าหมายนี้?')) {
+                    goalItem.remove();
+                    
+                    // Show empty message if no goals left
+                    if (goalsList.children.length === 0) {
+                        goalsList.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-bullseye text-4xl mb-2"></i>
+                                <p>ยังไม่มีเป้าหมายที่บันทึกไว้</p>
+                                <p class="text-sm">คลิกที่เป้าหมายด้านบนเพื่อเริ่มต้นวางแผน</p>
+                            </div>
+                        `;
+                    }
+                }
+            });
+            
+            alert('บันทึกเป้าหมายเรียบร้อยแล้ว!');
+        });
+        
+        newGoal.addEventListener('click', function() {
+            goalForm.classList.add('hidden');
+            goalResult.classList.add('hidden');
+            
+            // Reset form
+            document.getElementById('goalAmount').value = '';
+            document.getElementById('goalTime').value = '12';
+            document.getElementById('currentSavings').value = '0';
+            document.getElementById('interestRate').value = '2.5';
+        });
+        
+        // ... (ฟังก์ชันอื่นๆ เหมือนโค้ดก่อนหน้า) ...
+        
+       // Calculate salary function
+        document.getElementById('calculateBtn').addEventListener('click', calculateSalary);
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        document.getElementById('saveCalculation').addEventListener('click', saveCalculation);
+        document.getElementById('printResult').addEventListener('click', printResult);
+        document.getElementById('clearHistory').addEventListener('click', clearHistory);
+        document.getElementById('exportHistory').addEventListener('click', exportHistory);
+        
+        function calculateSalary() {
+            // รับค่าจากฟอร์ม
+            const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+            const workDays = parseFloat(document.getElementById('workDays').value) || 0;
+            const otRate = parseFloat(document.getElementById('otRate').value) || 0;
+            const otHours = parseFloat(document.getElementById('otHours').value) || 0;
+            const bonus = parseFloat(document.getElementById('bonus').value) || 0;
+            const transportation = parseFloat(document.getElementById('transportation').value) || 0;
+            const socialSecurityChecked = document.getElementById('socialSecurity').checked;
+            const providentFund = parseFloat(document.getElementById('providentFund').value) || 0;
+            const healthInsurance = parseFloat(document.getElementById('healthInsurance').value) || 0;
+            const otherDeductions = parseFloat(document.getElementById('otherDeductions').value) || 0;
+            
+            // คำนวณเงินเดือน
+            const otAmount = otHours * otRate;
+            const totalSalary = basicSalary + otAmount + bonus + transportation;
+            
+            // คำนวณหักประกันสังคม (5% ของเงินเดือนพื้นฐาน แต่ไม่เกิน 750 บาท)
+            let socialSecurity = 0;
+            if (socialSecurityChecked) {
+                socialSecurity = Math.min(basicSalary * 0.05, 750);
+            }
+            
+            // คำนวณภาษี (แบบละเอียด)
+            const taxType = document.getElementById('taxType').value;
+            const dependents = parseInt(document.getElementById('dependents').value) || 0;
+            const otherAllowances = parseFloat(document.getElementById('otherAllowances').value) || 0;
+            const insuranceDeduction = parseFloat(document.getElementById('insuranceDeduction').value) || 0;
+            
+            let tax = calculateTax(totalSalary, taxType, dependents, otherAllowances, insuranceDeduction);
+            
+            // คำนวณการหักทั้งหมด
+            const totalDeductions = socialSecurity + providentFund + healthInsurance + otherDeductions + tax;
+            
+            // เงินเดือนสุทธิ
+            const netSalary = totalSalary - totalDeductions;
+            
+            // แสดงผลลัพธ์
+            document.getElementById('basicSalaryResult').textContent = formatCurrency(basicSalary);
+            document.getElementById('otResult').textContent = formatCurrency(otAmount);
+            document.getElementById('bonusResult').textContent = formatCurrency(bonus);
+            document.getElementById('transportationResult').textContent = formatCurrency(transportation);
+            document.getElementById('totalSalary').textContent = formatCurrency(totalSalary);
+            document.getElementById('socialSecurityResult').textContent = formatCurrency(socialSecurity);
+            document.getElementById('providentFundResult').textContent = formatCurrency(providentFund);
+            document.getElementById('healthInsuranceResult').textContent = formatCurrency(healthInsurance);
+            document.getElementById('otherDeductionsResult').textContent = formatCurrency(otherDeductions);
+            document.getElementById('taxResult').textContent = formatCurrency(tax);
+            document.getElementById('netSalary').textContent = formatCurrency(netSalary);
+            
+            // สรุปผล
+            document.getElementById('summaryText').textContent = 
+                `คุณมีรายได้รวม ${formatCurrency(totalSalary)} บาท หักค่าใช้จ่าย ${formatCurrency(totalDeductions)} บาท 
+                เหลือเงินสุทธิ ${formatCurrency(netSalary)} บาท`;
+            
+            // การวิเคราะห์ทางการเงิน
+            const savingGoal = parseFloat(document.getElementById('savingGoal').value) || 0;
+            const monthlyExpenses = parseFloat(document.getElementById('monthlyExpenses').value) || 0;
+            
+            if (savingGoal > 0 || monthlyExpenses > 0) {
+                const savingAmount = (savingGoal / 100) * netSalary;
+                const remainingMoney = netSalary - monthlyExpenses - savingAmount;
+                
+                document.getElementById('savingGoalResult').textContent = formatCurrency(savingAmount);
+                document.getElementById('monthlyExpensesResult').textContent = formatCurrency(monthlyExpenses);
+                document.getElementById('remainingMoney').textContent = formatCurrency(remainingMoney);
+                
+                // Update progress bars
+                const savingPercentage = Math.min((savingAmount / netSalary) * 100, 100);
+                const expensesPercentage = Math.min((monthlyExpenses / netSalary) * 100, 100);
+                
+                document.getElementById('savingProgress').style.width = `${savingPercentage}%`;
+                document.getElementById('expensesProgress').style.width = `${expensesPercentage}%`;
+            }
+        }
+        
+        function calculateTax(income, taxType, dependents, otherAllowances, insuranceDeduction) {
+            // คำนวณภาษีตามอัตราภาษีเงินได้บุคคลธรรมดาปี 2565
+            let allowance = 60000; // ค่าลดหย่อนส่วนตัว
+            
+            // ค่าลดหย่อนตามสถานะ
+            if (taxType === 'married') {
+                allowance += 60000; // คู่สมรส
+            }
+            
+            // ผู้อยู่ในอุปการะ
+            allowance += dependents * 30000;
+            
+            // ค่าลดหย่อนอื่นๆ และประกันชีวิต
+            allowance += otherAllowances;
+            allowance += Math.min(insuranceDeduction, 100000);
+            
+            // รายได้หลังหักลดหย่อน
+            const taxableIncome = Math.max(income - allowance, 0);
+            
+            // คำนวณภาษีตามขั้นบันได
+            let tax = 0;
+            
+            if (taxableIncome > 2000000) {
+                tax += (taxableIncome - 2000000) * 0.35;
+                taxableIncome = 2000000;
+            }
+            if (taxableIncome > 1000000) {
+                tax += (taxableIncome - 1000000) * 0.30;
+                taxableIncome = 1000000;
+            }
+            if (taxableIncome > 750000) {
+                tax += (taxableIncome - 750000) * 0.25;
+                taxableIncome = 750000;
+            }
+            if (taxableIncome > 500000) {
+                tax += (taxableIncome - 500000) * 0.20;
+                taxableIncome = 500000;
+            }
+            if (taxableIncome > 300000) {
+                tax += (taxableIncome - 300000) * 0.15;
+                taxableIncome = 300000;
+            }
+            if (taxableIncome > 150000) {
+                tax += (taxableIncome - 150000) * 0.10;
+                taxableIncome = 150000;
+            }
+            if (taxableIncome > 0) {
+                tax += taxableIncome * 0.05;
+            }
+            
+            return tax / 12; // แปลงเป็นภาษีต่อเดือน
+        }
+        
+        function formatCurrency(amount) {
+            return amount.toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + ' บาท';
+        }
+        
+        function resetForm() {
+            document.getElementById('basicSalary').value = '';
+            document.getElementById('workDays').value = '22';
+            document.getElementById('otRate').value = '100';
+            document.getElementById('otHours').value = '0';
+            document.getElementById('bonus').value = '0';
+            document.getElementById('transportation').value = '0';
+            document.getElementById('socialSecurity').checked = true;
+            document.getElementById('providentFund').value = '0';
+            document.getElementById('healthInsurance').value = '0';
+            document.getElementById('otherDeductions').value = '0';
+            document.getElementById('taxType').value = 'single';
+            document.getElementById('dependents').value = '0';
+            document.getElementById('otherAllowances').value = '0';
+            document.getElementById('insuranceDeduction').value = '0';
+            document.getElementById('savingGoal').value = '20';
+            document.getElementById('monthlyExpenses').value = '0';
+            
+            // รีเซ็ตผลลัพธ์
+            document.getElementById('basicSalaryResult').textContent = '0 บาท';
+            document.getElementById('otResult').textContent = '0 บาท';
+            document.getElementById('bonusResult').textContent = '0 บาท';
+            document.getElementById('transportationResult').textContent = '0 บาท';
+            document.getElementById('totalSalary').textContent = '0 บาท';
+            document.getElementById('socialSecurityResult').textContent = '0 บาท';
+            document.getElementById('providentFundResult').textContent = '0 บาท';
+            document.getElementById('healthInsuranceResult').textContent = '0 บาท';
+            document.getElementById('otherDeductionsResult').textContent = '0 บาท';
+            document.getElementById('taxResult').textContent = '0 บาท';
+            document.getElementById('netSalary').textContent = '0 บาท';
+            document.getElementById('summaryText').textContent = 'กรุณากรอกข้อมูลและกดปุ่มคำนวณเพื่อดูสรุปเงินเดือน';
+        }
+        
+        function saveCalculation() {
+            const netSalary = document.getElementById('netSalary').textContent;
+            const totalSalary = document.getElementById('totalSalary').textContent;
+            
+            // สร้างรายการประวัติ
+            const historyItem = document.createElement('div');
+            historyItem.className = 'bg-white border border-gray-200 rounded-lg p-4';
+            historyItem.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">เงินเดือนสุทธิ: ${netSalary}</p>
+                        <p class="text-sm text-gray-500">รวม: ${totalSalary}</p>
+                    </div>
+                    <span class="text-sm text-gray-500">${new Date().toLocaleDateString('th-TH')}</span>
+                </div>
+            `;
+            
+            // เพิ่มในรายการประวัติ
+            const historyList = document.getElementById('historyList');
+            if (historyList.firstChild.classList.contains('text-center')) {
+                historyList.innerHTML = '';
+            }
+            historyList.prepend(historyItem);
+            
+            alert('บันทึกการคำนวณเรียบร้อยแล้ว!');
+        }
+        
+        function printResult() {
+            window.print();
+        }
+        
+        function clearHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-clock text-4xl mb-2"></i>
+                    <p>ยังไม่มีประวัติการคำนวณ</p>
+                </div>
+            `;
+        }
+        
+        function exportHistory() {
+            alert('ส่งออกข้อมูลเรียบร้อยแล้ว!');
+        }
+    </script>
+</body>
+</html>
